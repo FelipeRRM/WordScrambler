@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/menuFragment"
-        android:name="feliperrm.com.wordscrambler.MenuFragment"
+        android:name="feliperrm.com.wordscrambler.ui.menu.MenuFragment"
         android:label="fragment_menu"
         tools:layout="@layout/fragment_menu" />
 </navigation>

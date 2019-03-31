@@ -1,7 +1,8 @@
-package feliperrm.com.wordscrambler
+package feliperrm.com.wordscrambler.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import feliperrm.com.wordscrambler.R
 
 class MainActivity : AppCompatActivity() {
 
