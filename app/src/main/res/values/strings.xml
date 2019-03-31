@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">WordScrambler</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">Word Scrambler</string>
+    <string name="play_game">Play Game</string>
+    <string name="statistics">Statistics</string>
+    <string name="confirm">Confirm</string>
+    <string name="right_answers_this_session">Right answers on this session:</string>
+    <string name="wrong_answers_this_session">Wrong answers on this session:</string>
 </resources>
