@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import feliperrm.com.wordscrambler.databinding.FragmentGameBinding
-import feliperrm.com.wordscrambler.databinding.FragmentMenuBinding
 import feliperrm.com.wordscrambler.utils.getViewModel
 
 class GameFragment : Fragment() {
