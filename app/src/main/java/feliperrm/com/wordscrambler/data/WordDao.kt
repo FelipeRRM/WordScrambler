@@ -13,9 +13,15 @@ import androidx.room.Query
 interface WordDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertWords(vararg words: Word)
+    suspend fun insertWord(word: Word)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertWords(words: List<Word>)
 
     @Query("SELECT * FROM Word WHERE length(word) >= :minLength ORDER BY RANDOM() LIMIT :number")
-    suspend fun getRandomWords(number: Int, minLength: Int = 1): List<LiveData<Word>>
+    suspend fun getRandomWords(number: Int, minLength: Int = 1): List<Word>
+
+    @Query("SELECT count(*) FROM Word")
+    suspend fun getTotalWords(): Int
 
 }
