@@ -79,6 +79,10 @@
             app:layout_constraintTop_toBottomOf="@+id/scrambledWordTextView" />
 
         <EditText
+            android:maxLength="@{viewModel.scrambledWord.length()}"
+            android:singleLine="true"
+            android:lines="1"
+            android:maxLines="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"

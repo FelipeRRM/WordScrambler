@@ -18,6 +18,10 @@ interface WordDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWords(words: List<Word>)
 
+    /**
+     * Returns a random number o words with the specified min length
+     * @param minLength minimum length of each returned word
+     */
     @Query("SELECT * FROM Word WHERE length(word) >= :minLength ORDER BY RANDOM() LIMIT :number")
     suspend fun getRandomWords(number: Int, minLength: Int = 1): List<Word>
 
