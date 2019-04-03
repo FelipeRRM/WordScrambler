@@ -8,7 +8,7 @@ class ScrambledWord(val word: Word) {
     val scrambledText = scramble()
 
     private fun scramble(): String {
-        return word.word.asIterable().shuffled().toString()
+        return String(word.word.asIterable().shuffled().toCharArray())
     }
 
     override fun toString(): String {

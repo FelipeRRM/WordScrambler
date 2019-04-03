@@ -2,13 +2,16 @@ package feliperrm.com.wordscrambler.ui.game
 
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import feliperrm.com.wordscrambler.data.Database
-import feliperrm.com.wordscrambler.data.ScrambledWord
-import feliperrm.com.wordscrambler.data.Word
+import feliperrm.com.wordscrambler.data.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import timber.log.Timber
+import java.util.*
+import kotlin.concurrent.fixedRateTimer
 
 private const val WORDS_PER_REQUEST = 50
 private const val SIZE_TO_REQUEST_MORE = 10
@@ -16,16 +19,94 @@ private const val MIN_WORD_SIZE = 3
 
 class GameViewModel(private val db: Database) : ViewModel() {
 
-    val wordsList = ObservableArrayList<Word>()
-    val scrambledWord = MutableLiveData<ScrambledWord>()
-    val timeElapsedText = MutableLiveData<String>().apply { value = "10 seconds" }
-    val rightAnswersSession = MutableLiveData<String>().apply { value = "0" }
-    val wrongAnswersSession = MutableLiveData<String>().apply { value = "0" }
+    // List containing the next words to be played
+    private val wordsList = ObservableArrayList<Word>()
+
+    // Scrambled word that is currently being played
+    private val scrambledWord = MutableLiveData<ScrambledWord>()
+    val scrambledWordText =
+        MediatorLiveData<String>().apply { addSource(scrambledWord) { word -> value = word.scrambledText } }
+    val timeElapsed = MutableLiveData<Int>().apply { value = 0 }
+    val rightAnswersSession = MutableLiveData<Int>().apply { value = 0 }
+    val wrongAnswersSession = MutableLiveData<Int>().apply { value = 0 }
+    private val wrongAnswersWord = MutableLiveData<Int>()
+
+    // Current text written by the player
+    val currentText = MutableLiveData<String>()
+
+    // Timer handling the incremental watch
+    var timer: Timer? = null
 
     init {
         viewModelScope.launch {
             wordsList.addAll(db.wordDao().getRandomWords(WORDS_PER_REQUEST, MIN_WORD_SIZE))
             wordsList.addOnListChangedCallback(listListener)
+            setNewWord()
+        }
+    }
+
+    private fun setNewWord() {
+        wrongAnswersWord.value = 0
+        scrambledWord.value = ScrambledWord(wordsList.removeAt(0))
+        Timber.d("UNSCRAMBLED WORD: %s", scrambledWord.value?.word?.word)
+        resetTimer()
+    }
+
+    private fun resetTimer() {
+        timeElapsed.value = 0
+        timer?.cancel()
+        timer = fixedRateTimer(period = 1000) {
+            viewModelScope.launch { timeElapsed.apply { value = value?.plus(1) ?: 1 } }
+        }
+    }
+
+    fun playWord() {
+        if (currentText.value?.equals(scrambledWord.value?.word?.word, ignoreCase = true) == true) {
+            correctAnswer()
+        } else {
+            wrongAnswer()
+        }
+    }
+
+    private fun correctAnswer() {
+        storeRightAnswer()
+        rightAnswersSession.apply { value = value?.plus(1) ?: 1 }
+        setNewWord()
+        currentText.value = ""
+    }
+
+    private fun storeRightAnswer() {
+        viewModelScope.launch {
+            db.rightAnswerDao().insertRightAnswer(
+                RightAnswer(
+                    wordId = scrambledWord.value?.word?.id,
+                    secondsPlayed = timeElapsed.value,
+                    wrongAnswers = wrongAnswersWord.value
+                )
+            )
+        }
+    }
+
+    private fun wrongAnswer() {
+        wrongAnswersSession.apply { value = value?.plus(1) ?: 1 }
+        wrongAnswersWord.apply { value = value?.plus(1) ?: 1 }
+    }
+
+    override fun onCleared() {
+        timer?.cancel()
+        savePlayedSession()
+        super.onCleared()
+    }
+
+    private fun savePlayedSession() {
+        viewModelScope.launch {
+            db.sessionDao().insertSession(
+                Session(
+                    secondsPlayed = timeElapsed.value,
+                    rightAnswers = rightAnswersSession.value,
+                    wrongAnswers = wrongAnswersSession.value
+                )
+            )
         }
     }
 

@@ -5,4 +5,10 @@
     <string name="confirm">Confirm</string>
     <string name="right_answers_this_session">Right answers on this session:</string>
     <string name="wrong_answers_this_session">Wrong answers on this session:</string>
+    <plurals name="time_elapsed">
+        <item quantity="zero">%1$d seconds</item>
+        <item quantity="one">%1$d second</item>
+        <item quantity="two">%1$d seconds</item>
+        <item quantity="other">%1$d seconds</item>
+    </plurals>
 </resources>

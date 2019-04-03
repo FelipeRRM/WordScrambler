@@ -7,11 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import feliperrm.com.wordscrambler.databinding.FragmentGameBinding
+import feliperrm.com.wordscrambler.utils.App
 import feliperrm.com.wordscrambler.utils.getViewModel
 
 class GameFragment : Fragment() {
 
-    private val vm by lazy { getViewModel<GameViewModel>() }
+    private val vm by lazy { getViewModel { GameViewModel(App.application.db) } }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         FragmentGameBinding.inflate(inflater, container, false).apply {
