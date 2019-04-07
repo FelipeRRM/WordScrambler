@@ -15,6 +15,7 @@
     <string name="easiest_word_guess">Easiest Word to Guess</string>
     <string name="options">Options</string>
     <string name="choose_min_max_word_size">Choose the minimum and the maximum size of the words to be played:</string>
+    <string name="type_unscrambled_word">Type Unscrambled Word</string>
     <plurals name="time_elapsed">
         <item quantity="zero">%1$d seconds</item>
         <item quantity="one">%1$d second</item>

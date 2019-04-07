@@ -71,13 +71,13 @@ class GameViewModel(private val db: Database, private val minWordSize: Int, priv
         } else {
             wrongAnswer()
         }
+        currentText.value = ""
     }
 
     private fun correctAnswer() {
         storeRightAnswer(scrambledWord.value?.word?.id, timeElapsedWord.value, wrongAnswersWord.value)
         rightAnswersSession.apply { value = value?.plus(1) ?: 1 }
         setNewWord()
-        currentText.value = ""
     }
 
     private fun storeRightAnswer(wordId: Int?, secondsPlayed: Int?, wrongAnswers: Int?) {
