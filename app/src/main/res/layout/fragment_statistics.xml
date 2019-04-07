@@ -20,6 +20,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:orientation="vertical">
 
             <TextView
@@ -121,7 +122,79 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="40dp"
                 android:layout_marginEnd="12dp"
+                android:visibility="@{(viewModel.rightAnswers == null &amp;&amp; viewModel.wrongAnswers == null) ? View.GONE : View.VISIBLE}"
                 bindable:pieEntries="@{viewModel.answersPieEntries}" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="vertical"
+                android:visibility="@{viewModel.hardestWord == null ? View.GONE : View.VISIBLE}">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:text="@string/hardest_word_guess"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:text="@{viewModel.hardestWord}"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="22sp"
+                    tools:text="Pineapple" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:text="@{@plurals/time_elapsed(viewModel.hardestWordSeconds, viewModel.hardestWordSeconds)}"
+                    tools:text="83 seconds" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="40dp"
+                android:orientation="vertical"
+                android:visibility="@{viewModel.easiestWord == null ? View.GONE : View.VISIBLE}">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:text="@string/easiest_word_guess"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:text="@{viewModel.easiestWord}"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="22sp"
+                    tools:text="Car" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:text="@{@plurals/time_elapsed(viewModel.easiestWordSeconds, viewModel.easiestWordSeconds)}"
+                    tools:text="83 seconds" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

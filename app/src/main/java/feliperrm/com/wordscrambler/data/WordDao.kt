@@ -21,8 +21,8 @@ interface WordDao {
      * Returns a random number o words with the specified min length
      * @param minLength minimum length of each returned word
      */
-    @Query("SELECT * FROM Word WHERE length(word) >= :minLength ORDER BY RANDOM() LIMIT :number")
-    suspend fun getRandomWords(number: Int, minLength: Int = 1): List<Word>
+    @Query("SELECT * FROM Word WHERE length(word) >= :minLength AND length(word) <= :maxLength ORDER BY RANDOM() LIMIT :number")
+    suspend fun getRandomWords(number: Int, minLength: Int = 2, maxLength: Int = 11): List<Word>
 
     @Query("SELECT count(*) FROM Word")
     suspend fun getTotalWords(): Int

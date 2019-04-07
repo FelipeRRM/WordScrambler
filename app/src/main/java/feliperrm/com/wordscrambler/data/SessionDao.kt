@@ -24,6 +24,6 @@ interface SessionDao {
     suspend fun getTotalSessions(): Int
 
     @Query("SELECT sum(secondsPlayed) FROM Session")
-    suspend fun getTotalTimePlayed(): Int
+    suspend fun getTotalTimePlayed(): Int?
 
 }

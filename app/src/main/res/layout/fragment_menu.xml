@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -47,25 +48,48 @@
 
         <Button
             android:id="@+id/playGameButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/main_menu_button_width"
+            android:layout_height="@dimen/main_menu_button_height"
+            android:background="@drawable/round_button_bg"
             android:text="@string/play_game"
+            android:textColor="@color/white"
             android:visibility="@{viewModel.wordsAvailable &gt; 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            bind:shrinkTouchDuration="@{300L}"
+            bind:shrinkTouchEndSize="@{0.95F}" />
 
         <Button
             android:id="@+id/statisticsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_width="@dimen/main_menu_button_width"
+            android:layout_height="@dimen/main_menu_button_height"
+            android:layout_marginTop="@dimen/main_menu_button_margin"
+            android:background="@drawable/round_button_bg"
             android:text="@string/statistics"
+            android:textColor="@color/white"
             android:visibility="@{viewModel.wordsAvailable &gt; 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/playGameButton" />
+            app:layout_constraintTop_toBottomOf="@+id/playGameButton"
+            bind:shrinkTouchDuration="@{300L}"
+            bind:shrinkTouchEndSize="@{0.95F}" />
+
+        <Button
+            android:id="@+id/optionsButton"
+            android:layout_width="@dimen/main_menu_button_width"
+            android:layout_height="@dimen/main_menu_button_height"
+            android:layout_marginTop="@dimen/main_menu_button_margin"
+            android:background="@drawable/round_button_bg"
+            android:text="@string/options"
+            android:textColor="@color/white"
+            android:visibility="@{viewModel.wordsAvailable &gt; 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/statisticsButton"
+            bind:shrinkTouchDuration="@{300L}"
+            bind:shrinkTouchEndSize="@{0.95F}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

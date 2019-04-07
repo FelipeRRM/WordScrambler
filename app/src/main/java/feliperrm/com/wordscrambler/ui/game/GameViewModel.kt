@@ -9,16 +9,15 @@ import androidx.lifecycle.viewModelScope
 import feliperrm.com.wordscrambler.data.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
 
 private const val WORDS_PER_REQUEST = 50
 private const val SIZE_TO_REQUEST_MORE = 10
-private const val MIN_WORD_SIZE = 3
 
-class GameViewModel(private val db: Database) : ViewModel() {
+class GameViewModel(private val db: Database, private val minWordSize: Int, private val maxWordSize: Int) :
+    ViewModel() {
 
     // List containing the next words to be played
     private val wordsList = ObservableArrayList<Word>()
@@ -28,7 +27,8 @@ class GameViewModel(private val db: Database) : ViewModel() {
     // LiveData (Observable) String representation of the scrambled word. Updates automatically whenever we have a new scrambled word.
     val scrambledWordText =
         MediatorLiveData<String>().apply { addSource(scrambledWord) { word -> value = word.scrambledText } }
-    val timeElapsed = MutableLiveData<Int>().apply { value = 0 }
+    val timeElapsedWord = MutableLiveData<Int>().apply { value = 0 }
+    private val timeElapsed = MutableLiveData<Int>().apply { value = 0 }
     val rightAnswersSession = MutableLiveData<Int>().apply { value = 0 }
     val wrongAnswersSession = MutableLiveData<Int>().apply { value = 0 }
     private val wrongAnswersWord = MutableLiveData<Int>()
@@ -41,7 +41,7 @@ class GameViewModel(private val db: Database) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            wordsList.addAll(db.wordDao().getRandomWords(WORDS_PER_REQUEST, MIN_WORD_SIZE))
+            wordsList.addAll(db.wordDao().getRandomWords(WORDS_PER_REQUEST, minWordSize, maxWordSize))
             wordsList.addOnListChangedCallback(listListener)
             setNewWord()
         }
@@ -55,10 +55,13 @@ class GameViewModel(private val db: Database) : ViewModel() {
     }
 
     private fun resetTimer() {
-        timeElapsed.value = 0
+        timeElapsedWord.value = 0
         timer?.cancel()
         timer = fixedRateTimer(period = 1000) {
-            viewModelScope.launch { timeElapsed.apply { value = value?.plus(1) ?: 1 } }
+            viewModelScope.launch {
+                timeElapsed.apply { value = value?.plus(1) ?: 1 }
+                timeElapsedWord.apply { value = value?.plus(1) ?: 1 }
+            }
         }
     }
 
@@ -71,19 +74,19 @@ class GameViewModel(private val db: Database) : ViewModel() {
     }
 
     private fun correctAnswer() {
-        storeRightAnswer()
+        storeRightAnswer(scrambledWord.value?.word?.id, timeElapsedWord.value, wrongAnswersWord.value)
         rightAnswersSession.apply { value = value?.plus(1) ?: 1 }
         setNewWord()
         currentText.value = ""
     }
 
-    private fun storeRightAnswer() {
-        viewModelScope.launch {
+    private fun storeRightAnswer(wordId: Int?, secondsPlayed: Int?, wrongAnswers: Int?) {
+        GlobalScope.launch {
             db.rightAnswerDao().insertRightAnswer(
                 RightAnswer(
-                    wordId = scrambledWord.value?.word?.id,
-                    secondsPlayed = timeElapsed.value,
-                    wrongAnswers = wrongAnswersWord.value
+                    wordId = wordId,
+                    secondsPlayed = secondsPlayed,
+                    wrongAnswers = wrongAnswers
                 )
             )
         }
@@ -123,7 +126,7 @@ class GameViewModel(private val db: Database) : ViewModel() {
         override fun onItemRangeRemoved(sender: ObservableArrayList<Word>?, positionStart: Int, itemCount: Int) {
             if (wordsList.size < SIZE_TO_REQUEST_MORE) {
                 viewModelScope.launch {
-                    wordsList.addAll(db.wordDao().getRandomWords(WORDS_PER_REQUEST, MIN_WORD_SIZE))
+                    wordsList.addAll(db.wordDao().getRandomWords(WORDS_PER_REQUEST, minWordSize, maxWordSize))
                 }
             }
         }
