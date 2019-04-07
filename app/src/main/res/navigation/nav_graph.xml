@@ -9,10 +9,17 @@
         android:id="@+id/menuFragment"
         android:name="feliperrm.com.wordscrambler.ui.menu.MenuFragment"
         android:label="fragment_menu"
-        tools:layout="@layout/fragment_menu" >
+        tools:layout="@layout/fragment_menu">
         <action
             android:id="@+id/action_menuFragment_to_gameFragment"
             app:destination="@id/gameFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_menuFragment_to_statisticsFragment"
+            app:destination="@id/statisticsFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -23,4 +30,10 @@
         android:name="feliperrm.com.wordscrambler.ui.game.GameFragment"
         android:label="fragment_game"
         tools:layout="@layout/fragment_game" />
+    <fragment
+        android:id="@+id/statisticsFragment"
+        android:name="feliperrm.com.wordscrambler.ui.menu.StatisticsFragment"
+        android:label="StatisticsFragment"
+        tools:layout="@layout/fragment_statistics" />
+
 </navigation>

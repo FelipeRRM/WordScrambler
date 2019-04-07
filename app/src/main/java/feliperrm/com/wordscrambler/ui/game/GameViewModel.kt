@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import feliperrm.com.wordscrambler.data.*
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -100,7 +101,7 @@ class GameViewModel(private val db: Database) : ViewModel() {
     }
 
     private fun savePlayedSession() {
-        viewModelScope.launch {
+        GlobalScope.launch {
             db.sessionDao().insertSession(
                 Session(
                     secondsPlayed = timeElapsed.value,

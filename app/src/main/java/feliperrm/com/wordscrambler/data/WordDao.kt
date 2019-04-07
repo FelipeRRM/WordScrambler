@@ -27,4 +27,7 @@ interface WordDao {
     @Query("SELECT count(*) FROM Word")
     suspend fun getTotalWords(): Int
 
+    @Query("SELECT * FROM Word WHERE id == :id")
+    suspend fun getWordById(id: Int): Word
+
 }
