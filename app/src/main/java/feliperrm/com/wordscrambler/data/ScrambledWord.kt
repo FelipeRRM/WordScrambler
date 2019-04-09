@@ -5,7 +5,7 @@ package feliperrm.com.wordscrambler.data
  */
 class ScrambledWord(val word: Word) {
 
-    val scrambledText = scramble()
+    private val scrambledText = scramble()
 
     private fun scramble(): String {
         return String(word.word.asIterable().shuffled().toCharArray())

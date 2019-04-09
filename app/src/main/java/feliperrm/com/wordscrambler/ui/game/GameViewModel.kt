@@ -26,7 +26,7 @@ class GameViewModel(private val db: Database, private val minWordSize: Int, priv
     private val scrambledWord = MutableLiveData<ScrambledWord>()
     // LiveData (Observable) String representation of the scrambled word. Updates automatically whenever we have a new scrambled word.
     val scrambledWordText =
-        MediatorLiveData<String>().apply { addSource(scrambledWord) { word -> value = word.scrambledText } }
+        MediatorLiveData<String>().apply { addSource(scrambledWord) { word -> value = word.toString() } }
     val timeElapsedWord = MutableLiveData<Int>().apply { value = 0 }
     private val timeElapsed = MutableLiveData<Int>().apply { value = 0 }
     val rightAnswersSession = MutableLiveData<Int>().apply { value = 0 }

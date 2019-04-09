@@ -11,5 +11,5 @@ import androidx.room.PrimaryKey
 data class Word(
     @PrimaryKey(autoGenerate = true) var id: Int? = null,
     var word: String,
-    var timesPlayed: Int?
+    var timesPlayed: Int? = 0
 )
